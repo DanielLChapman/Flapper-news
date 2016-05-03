@@ -6,4 +6,30 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+
+// -------- Our code from here ----------
+var mongoose = require('mongoose');
+var Post = mongoose.model('Post');          // load post model
+var Comment = mongoose.model('Comment');    // load comment model
+
+// ----------- REST Roates --------------
+// Get all posts
+router.get('/posts', function(req, res, next) {
+	Post.find(function(err, posts) {
+		if (err) { return next(err); }
+		
+		res.json(posts);
+	});
+});
+// Create new post
+router.post('/posts', function(req, res, next) {
+	var post = new Post(req.body);
+	
+	post.save(function(err, post) {
+		if(err) { return next(err); }
+		
+		res.json(post);
+	});
+});
+
 module.exports = router;
